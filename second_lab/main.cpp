@@ -22,11 +22,14 @@ FUNC functions_rand[2] = {&BLS,&SLS};
 
 int main(){
 	int target = 100005;
+
 	printf("\t\tOAS\tBS\t\t\tBLS\tSLS\n");
+
 	FILE *file;
 	file = fopen("ready.txt", "w+");
 	fprintf(file,"\t\tOAS\tBS\t\t\tSLS\tBLS\n");
-	for(int j = 0; j < 4; j++){
+
+	for(int j = 0; j < 4; j++){//to mark which method is used now
 			switch(j)
 			{
 				case 0:{ 
@@ -46,13 +49,14 @@ int main(){
 									break;
 							 }
 			}
-		for(int n = 10000; n < 200000; n+=9500){
+
+		for(int n = 10000; n < 200000; n+=9500){// generating two arrays: sorted & random
 			int array_rand[n];
 			generate_random(array_rand, n, 100000);
 			int array_sort[n];
 			generate_up(array_sort, n, 100000);
 
-			switch(j)
+			switch(j)//putting target on its place
 			{
 				case 0:{ 
 								array_rand[0] = target;
@@ -74,10 +78,10 @@ int main(){
 							 }
 			}
 
-			std::chrono::__enable_if_is_duration<std::chrono::duration<long int, std::ratio<1, 1000000> > > time_ord[2];
+			std::chrono::__enable_if_is_duration<std::chrono::duration<long int, std::ratio<1, 1000000> > > time_ord[2];//defining variables for time 
 			std::chrono::__enable_if_is_duration<std::chrono::duration<long int, std::ratio<1, 1000000> > > time_rand[2];
 
-			for(int i = 0; i < 2; ++i){
+			for(int i = 0; i < 2; ++i){//cycle to call every funcion, being studied
 				auto begin = std::chrono::steady_clock::now();
 				functions_ord[i](array_sort, n, target);
 				auto end = std::chrono::steady_clock::now();
@@ -89,7 +93,7 @@ int main(){
 				time_rand[i] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
 			}
 			
-			printf("%d\t\t%d\t%d\t\t\t%d\t%d\n",n ,time_ord[0], time_ord[1], time_rand[0], time_rand[1]);
+			printf("%d\t\t%d\t%d\t\t\t%d\t%d\n",n ,time_ord[0], time_ord[1], time_rand[0], time_rand[1]);//printing results to terminal and to file
 			fprintf(file,"%d\t\t%d\t%d\t\t\t%d\t%d\n",n ,time_ord[0], time_ord[1], time_rand[0], time_rand[1]);
 		}
 	}
@@ -99,7 +103,7 @@ int main(){
 
 
 
-int BLS(int *array, int size, int target){
+int BLS(int *array, int size, int target){//ordinary search
 	for(int i = 0; i < size; ++i){
 		if(array[i] == target){
 			return i;
@@ -108,7 +112,7 @@ int BLS(int *array, int size, int target){
 	return -1;
 }
 
-int SLS(int *array, int size, int target){
+int SLS(int *array, int size, int target){//creating extra space for target and searching element without checking current "i" value
 	int* array2 = (int*)malloc((size+1) * sizeof(int));
 	std::memcpy(array2, array, size*sizeof(int));
 	array2[size] = target;
@@ -123,7 +127,7 @@ int SLS(int *array, int size, int target){
 	return i;
 }
 
-int OAS(int *array, int size, int target){
+int OAS(int *array, int size, int target){// ordinary search
 	for(int i = 0; i < size; ++i){
 		if(array[i] == target){
 			return i;
@@ -132,7 +136,7 @@ int OAS(int *array, int size, int target){
 	return -1;
 }
 
-int BS(int *array, int size, int target){
+int BS(int *array, int size, int target){//binary search
 	int low = 0;
 	int high = size-1;
 	while(low<=high){
@@ -147,7 +151,7 @@ int BS(int *array, int size, int target){
 	return -1;
 }
 
-void generate_random(int *arr, int arrLength,int mod) {
+void generate_random(int *arr, int arrLength,int mod) {//functions from first labarotory work
 	for (int i = 0; i < arrLength; ++i)
 		arr[i]=rand()%mod;
 }
