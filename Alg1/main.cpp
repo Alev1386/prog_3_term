@@ -41,13 +41,16 @@ int main() {
 
 void dijkstra(int source, int graph[][V]) {
     int dist[V], pred[V], visited[V];
-    for (int i = 0; i < V; ++i) {
+		//initialization of masses
+    for (int i = 0; i < V; ++i) {//initializing
         dist[i] = INF;
         pred[i] = -1;
         visited[i] = 0;
     }
-    dist[source] = 0;
+
+    dist[source] = 0;//start point
 		printf("\t\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10\t11\t12\n");
+		///////////////////////////////////////
 			printf("distance:\t");
 			for(int j = 0; j < V; ++j){
 				printf("%d\t",dist[j]);
@@ -58,6 +61,7 @@ void dijkstra(int source, int graph[][V]) {
 			}
 			printf("\n\n");
 
+		/////////////////////////////////////////////////
     for (int i = 0; i < V - 1; ++i) {
 			
         int minDist = INF;
@@ -72,7 +76,8 @@ void dijkstra(int source, int graph[][V]) {
 
         if (u == -1) break;
         visited[u] = 1;
-
+				
+				//searching of the point with least length, haven't been visited before
         for (int v = 0; v < V; ++v) {
             if (!visited[v] && graph[u][v] != INF && dist[u] + graph[u][v] < dist[v]) {
                 dist[v] = dist[u] + graph[u][v];
@@ -112,9 +117,11 @@ void dijkstra(int source, int graph[][V]) {
 
 
 void kruskal(int graph[][V]) {
-    Edge edges[V * V];
-    int edgeCount = 0;
+    Edge edges[V * V];//edges
+    int edgeCount = 0;//counter of edges
 
+
+		//transforming graph into list of edges
     for (int i = 0; i < V; ++i) {
         for (int j = i + 1; j < V; ++j) {
             if (graph[i][j] != INF) {
@@ -129,6 +136,7 @@ void kruskal(int graph[][V]) {
             }
         }
     }
+		//sorting edges with bubble sort
     for (int i = 0; i < edgeCount - 1; ++i) {
         for (int j = 0; j < edgeCount - i - 1; ++j) {
             if (edges[j].weight > edges[j + 1].weight) {
@@ -139,21 +147,22 @@ void kruskal(int graph[][V]) {
         }
     }
 
-    int parent[V];
+    int parent[V];//array for parent vertex
     for (int i = 0; i < V; ++i)
         parent[i] = i;
 
     std::cout << "MST:\n";
-    int mstWeight = 0;
+    int mstWeight = 0;//weight of mst
 
+		//building mst
     for (int i = 0; i < edgeCount; ++i) {
-        int uParent = findParent(edges[i].u, parent);
-        int vParent = findParent(edges[i].v, parent);
+        int uParent = findParent(edges[i].u, parent);//parent of u vertex
+        int vParent = findParent(edges[i].v, parent);//parent of v vertex
 
-        if (uParent != vParent) {
+        if (uParent != vParent) {//if vertexes ar in different trees
             std::cout << "edge: " << edges[i].u << " - " << edges[i].v << ", weight = " << edges[i].weight << std::endl;
-            mstWeight += edges[i].weight;
-            parent[uParent] = vParent;
+            mstWeight += edges[i].weight;//add weight of edge to mst
+            parent[uParent] = vParent;//connecting trees
         }
     }
 
