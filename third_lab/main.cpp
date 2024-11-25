@@ -1,8 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
 // shaker, fast
-void shaker(int *arr, int size, int base);
-void quick(int *arr, int low, int high);
+void shakerSort(int *arr, int size, int base);
+void quickSort(int *arr, int low, int high);
 void gen_rand(int* arr,int size);
 
 
@@ -22,7 +22,7 @@ int main(){
 	}
 }
 
-void quick(int* arr, int low, int high){
+void quickSort(int* arr, int low, int high){
 	
 	
 
@@ -30,7 +30,7 @@ void quick(int* arr, int low, int high){
 }
 
 
-void shaker(int *arr, int size, int base){
+void shakerSort(int *arr, int size, int base){
 	bool flag = true;
 	for(int i = 0; i < size; ++i){
 		if(flag == true){
@@ -40,9 +40,6 @@ void shaker(int *arr, int size, int base){
 			}
 			flag = false;
 		}
-
-
-
 		else{
 			for(int j = size-i+1; j > i; --j){
 				if(arr[j]<arr[j-1])
