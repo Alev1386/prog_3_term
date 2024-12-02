@@ -3,7 +3,6 @@
 #include <cstring>
 #include <chrono>
 #include <fstream>
-// shaker, fast
 void shakerSort(int *arr, int a,int n, bool flag, int size);
 void gen_rand(int* arr,int size);
 void printArray(int arr[], int n);
@@ -30,8 +29,9 @@ int main(){
 	for(int i = 0; i < 5; ++i){
 		bool print = false;
 		if (i == 0)
-			print = true;
-		int array[3][4][size[i]];
+			print = true;//for printing data of 15 size
+		int array[3][4][size[i]];//0 - random, 1 - sorted, 2 - reverse sorted ////// 0 - shaker, 1 -quick(last), 2 - quick(median), 3 - quick(hoare)
+		/*----------------filling arrays------------------*/
 		gen_rand(array[0][0], size[i]);
 		gen_up(array[1][0], size[i]);
 		gen_down(array[2][0], size[i]);
@@ -42,13 +42,13 @@ int main(){
 			std::memcpy(array[1][j],array[1][0], size[i]*sizeof(int));
 			std::memcpy(array[2][j],array[2][0], size[i]*sizeof(int));
 		}
-
+		/*-------------------------------------------------*/
 		std::chrono::__enable_if_is_duration<std::chrono::duration<long int, std::ratio<1, 1000000> > > time[12];
 
 
 		for (int j = 0; j < 4; j++)
 		{
-			if(print){
+			if(print){//print header
 				switch (j)
 				{
 				case 0:
@@ -72,23 +72,23 @@ int main(){
 			auto begin = std::chrono::steady_clock::now();
 			functions[j](array[0][j], 0, size[i],print, size[i]);
 			auto end = std::chrono::steady_clock::now();
-			time[j*3] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+			time[j*3] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);//writing time in variable for random data
 			if(print)
 				printf("Sorted: \n");
 			begin = std::chrono::steady_clock::now();
 			functions[j](array[1][j], 0, size[i],print, size[i]);
 			end = std::chrono::steady_clock::now();
-			time[j*3+1] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+			time[j*3+1] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);//writing time in variable for sorted data
 			if(print)
 				printf("Reversed sorted: \n");
 			begin = std::chrono::steady_clock::now();
 			functions[j](array[2][j], 0, size[i],print, size[i]);
 			end = std::chrono::steady_clock::now();
-			time[j*3+2] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+			time[j*3+2] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);//writing time in variable for reverse sorted data
 
 		}
 		
-		FILE *file;
+		FILE *file;//writing time in file
 		file = fopen(names[i], "w+");
 		for (int j = 0; j < 12; ++j)
 		{
@@ -101,12 +101,12 @@ int main(){
 
 /*---------------------------SHAKER SORT-----------------------------*/
 void shakerSort(int* arr, int a, int n, bool flag, int size) {
-    bool swapped = true;
+    bool swapped = true;//check status
     int start = 0;
     int end = n - 1;
 
     while (swapped) {
-        swapped = false;
+        swapped = false;//going forward
         for (int i = start; i < end; ++i) {
             if (arr[i] > arr[i + 1]) {
                 std::swap(arr[i], arr[i + 1]);
@@ -118,7 +118,7 @@ void shakerSort(int* arr, int a, int n, bool flag, int size) {
 		//printf("%d", flag);
         if (!swapped) break;
         swapped = false;
-        --end;
+        --end;//going backward
         for (int i = end - 1; i >= start; --i) {
             if (arr[i] > arr[i + 1]) {
                 std::swap(arr[i], arr[i + 1]);
@@ -157,11 +157,11 @@ void printArray(int arr[], int n){
 /*---------------------------QUICK SORT----------------------------------------*/
 /*--------------------------Last element--------------------------------*/
 
-int partitionLast(int arr[], int low, int high) {
+int partitionLast(int arr[], int low, int high) {//partition of array in two arrays by getting last element
     int pivot = arr[high];
     int i = low - 1;
 
-    for (int j = low; j < high; ++j) {
+    for (int j = low; j < high; ++j) {//swapping elements which are less than pivot
         if (arr[j] < pivot) {
             ++i;
             std::swap(arr[i], arr[j]);
@@ -182,7 +182,7 @@ void quickSortLast(int arr[], int low, int high, bool flag, int size) {
 }
 
 /*-----------------------------Median Element-------------------------*/
-int medianOfThree(int arr[], int low, int high) {
+int medianOfThree(int arr[], int low, int high) {//searching median element
     int mid = low + (high - low) / 2;
     if (arr[low] > arr[mid]) std::swap(arr[low], arr[mid]);
     if (arr[low] > arr[high]) std::swap(arr[low], arr[high]);
@@ -190,7 +190,7 @@ int medianOfThree(int arr[], int low, int high) {
     return mid;
 }
 
-int partitionMedian(int arr[], int low, int high) {
+int partitionMedian(int arr[], int low, int high) {//partition of array in two arrays by getting median
     int medianIndex = medianOfThree(arr, low, high);
     std::swap(arr[medianIndex], arr[high]);
     int pivot = arr[high];
@@ -241,7 +241,7 @@ void quickSortHoare(int arr[], int low, int high, bool flag, int size) {
     if (low < high) {
         int pi = partitionHoare(arr, low, high);
         if(flag)
-			printArray(arr, size); // Промежуточный вывод
+			printArray(arr, size); //
         quickSortHoare(arr, low, pi, flag, size);
         quickSortHoare(arr, pi + 1, high, flag, size);
     }
