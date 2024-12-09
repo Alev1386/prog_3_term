@@ -21,6 +21,9 @@ void quickSortHoare(int arr[], int low, int high, bool flag, int size);
 typedef void(*FUNC)(int*, int, int, bool, int);
 FUNC functions[4] = {&shakerSort, &quickSortLast, &quickSortMedian, &quickSortHoare};
 
+int pl = 0;
+int pm = 0;
+int ph = 0;
 
 
 int main(){
@@ -87,6 +90,12 @@ int main(){
 			time[j*3+2] = std::chrono::duration_cast<std::chrono::microseconds>(end - begin);//writing time in variable for reverse sorted data
 
 		}
+		if(time[0]<time[9]){
+			printf("Shaker is faster!\n");
+		}
+		else{
+			printf("Quick is faster!\n");
+		}
 		
 		FILE *file;//writing time in file
 		file = fopen(names[i], "w+");
@@ -104,12 +113,14 @@ void shakerSort(int* arr, int a, int n, bool flag, int size) {
     bool swapped = true;//check status
     int start = 0;
     int end = n - 1;
+	int k = 0;
 
     while (swapped) {
         swapped = false;//going forward
         for (int i = start; i < end; ++i) {
             if (arr[i] > arr[i + 1]) {
                 std::swap(arr[i], arr[i + 1]);
+				k++;
                 swapped = true;
             }
         }
@@ -122,6 +133,7 @@ void shakerSort(int* arr, int a, int n, bool flag, int size) {
         for (int i = end - 1; i >= start; --i) {
             if (arr[i] > arr[i + 1]) {
                 std::swap(arr[i], arr[i + 1]);
+				k++;
                 swapped = true;
             }
         }
@@ -129,6 +141,7 @@ void shakerSort(int* arr, int a, int n, bool flag, int size) {
 			printArray(arr, size);
         ++start;
     }
+	printf("shaker swaps:%d\n", k);
 }
 /*-------Generators--------------------------------*/
 void gen_rand(int* arr, int size){
@@ -161,10 +174,11 @@ int partitionLast(int arr[], int low, int high) {//partition of array in two arr
     int pivot = arr[high];
     int i = low - 1;
 
-    for (int j = low; j < high; ++j) {//swapping elements which are less than pivot
+    for (int j = low; j < high; ++j) {//swapping elements that are less than pivot
         if (arr[j] < pivot) {
             ++i;
             std::swap(arr[i], arr[j]);
+			pl++;
         }
     }
     std::swap(arr[i + 1], arr[high]);
@@ -193,10 +207,11 @@ int medianOfThree(int arr[], int low, int high) {//searching median element
 int partitionMedian(int arr[], int low, int high) {//partition of array in two arrays by getting median
     int medianIndex = medianOfThree(arr, low, high);
     std::swap(arr[medianIndex], arr[high]);
+	pm++;
     int pivot = arr[high];
     int i = low - 1;
 
-    for (int j = low; j < high; ++j) {
+    for (int j = low; j < high; ++j) {//swapping elements that are less than pivot
         if (arr[j] < pivot) {
             ++i;
             std::swap(arr[i], arr[j]);
@@ -234,6 +249,7 @@ int partitionHoare(int arr[], int low, int high) {
         if (i >= j) return j;
 
         std::swap(arr[i], arr[j]);
+		ph++;
     }
 }
 
