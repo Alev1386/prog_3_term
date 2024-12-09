@@ -46,8 +46,26 @@ int main() {
     std::cout << "Binary Search Tree (BST):\n";
     displayTree(bstRoot);
     std::cout << "\n\nHeight of BST: " << calculateHeight(bstRoot) << "\n";
+		std::cout << "Total Amount of Nodes: " << countTotalNodes(bstRoot)<< "\n\n\n";
 
-    std::cout << "\nSum of even path lengths in BST: " 
+		if(deleteNode(bstRoot, randomArray[5]))
+			printf("Node %d deleted!", randomArray[5]);
+		std::cout << "\nBinary Search Tree after deliting:\n";
+    displayTree(bstRoot);
+
+		std::cout<<"\nSearching element "<< randomArray[7]<<"...";
+		if(findNode(bstRoot, randomArray[7]))
+			printf("\nSuccess!");
+		else
+			printf("\nNo node with same value found!");
+		std::cout<<"\nSearching element "<< randomArray[5]<<"...";
+		if(findNode(bstRoot, randomArray[5]))
+			printf("\nSuccess!");
+		else
+			printf("\nNo node with same value found!");
+
+
+    std::cout << "\n\n\nSum of even path lengths in BST: " 
               << calculateEvenPathsSum(bstRoot) << "\n";
 
     std::cout << "\nTree Traversals:\n";
@@ -167,7 +185,6 @@ TreeNode* deleteNode(TreeNode* root, int val) {
             delete root;
             return temp;
         }
-        // Node with two children: Find the inorder successor
         TreeNode* temp = root->rightChild;
         while (temp->leftChild) temp = temp->leftChild; // Get the smallest value
         root->value = temp->value; // Replace value
@@ -183,7 +200,7 @@ int calculateHeight(TreeNode* root) {
 
 // Counts the total number of nodes in the tree
 int countTotalNodes(TreeNode* root) {
-    if (!root) return 0; // Base case: no nodes
+    if (!root) return 0; // no nodes
     return 1 + countTotalNodes(root->leftChild) + countTotalNodes(root->rightChild);
 }
 
